@@ -13,8 +13,9 @@ module Adherence
       behaviors << behavior
     end
 
-    def consequence(consequence)
-      consequences << consequence
+    def consequence(method, *args)
+      consequences << Consequence.new(:method => method,
+                                      :args   => args)
     end
   end
 end

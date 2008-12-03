@@ -24,11 +24,14 @@ module Adherence
 
     describe "after adding a consequence" do
       before do
-        @action.consequence :example
+        @action.consequence :example, :one, :two
       end
 
       it "should include that consequence in its list of consequences" do
-        @action.consequences.should include(:example)
+        @action.consequences.detect do |consequence|
+          consequence.method == :example &&
+            consequence.args == [:one, :two]
+        end.should_not be_nil
       end
     end
   end
