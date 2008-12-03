@@ -42,4 +42,24 @@ module Adherence
       end
     end
   end
+
+  describe Consequence do
+    before do
+      @args        = [:one, :two]
+      @consequence = Consequence.new(:method => :example, :args => @args)
+    end
+
+    it "should call its method with the given args when run" do
+      klass = Class.new
+      klass.class_eval do
+        attr_accessor :args
+        def example(*args)
+          @args = args
+        end
+      end
+      object = klass.new
+      object.instance_eval(&@consequence)
+      object.args.should == @args
+    end
+  end
 end

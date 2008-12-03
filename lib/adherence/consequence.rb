@@ -6,6 +6,14 @@ module Adherence
       assert_valid_options!(options)
     end
 
+    def to_proc
+      method = self.method
+      args   = self.args
+      lambda do
+        send(method, *args)
+      end
+    end
+
     private
 
     def assert_valid_options!(options) #:nodoc:
