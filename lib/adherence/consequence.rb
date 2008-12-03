@@ -1,6 +1,6 @@
 module Adherence
   class Consequence
-    attr_reader :method, :args
+    attr_reader :method, :args, :formats
 
     def initialize(options)
       assert_valid_options!(options)
@@ -34,7 +34,7 @@ module Adherence
     end
 
     def valid_options #:nodoc:
-      [:method, :args]
+      [:method, :args, :formats]
     end
   end
 end

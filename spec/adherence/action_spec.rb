@@ -22,7 +22,7 @@ module Adherence
       end
     end
 
-    describe "after adding a consequence" do
+    describe "after adding a consequence without formats" do
       before do
         @action.consequence :example, :one, :two
       end
@@ -30,7 +30,36 @@ module Adherence
       it "should include that consequence in its list of consequences" do
         @action.consequences.detect do |consequence|
           consequence.method == :example &&
-            consequence.args == [:one, :two]
+            consequence.args == [:one, :two] &&
+            consequence.formats == :all
+        end.should_not be_nil
+      end
+    end
+
+    describe "after adding a consequence with formats" do
+      before do
+        @action.consequence :example, :one, :two, :formats => [:html]
+      end
+
+      it "should include that consequence in its list of consequences" do
+        @action.consequences.detect do |consequence|
+          consequence.method == :example &&
+            consequence.args == [:one, :two] &&
+            consequence.formats == [:html]
+        end.should_not be_nil
+      end
+    end
+
+    describe "after adding a consequence with formats and hash arguments" do
+      before do
+        @action.consequence :example, :one, :arg => :value, :formats => [:html]
+      end
+
+      it "should include that consequence in its list of consequences" do
+        @action.consequences.detect do |consequence|
+          consequence.method == :example &&
+            consequence.args == [:one, { :arg => :value }] &&
+            consequence.formats == [:html]
         end.should_not be_nil
       end
     end

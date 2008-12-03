@@ -14,8 +14,13 @@ module Adherence
     end
 
     def consequence(method, *args)
-      consequences << Consequence.new(:method => method,
-                                      :args   => args)
+      last_hash = args.last.is_a?(Hash) ? args.pop : nil
+      options   = last_hash || {}
+      formats   = options.delete(:formats) || :all
+      args << last_hash unless last_hash.nil? || last_hash == {}
+      consequences << Consequence.new(:method  => method,
+                                      :args    => args,
+                                      :formats => formats)
     end
   end
 end
