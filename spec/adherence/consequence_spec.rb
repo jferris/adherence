@@ -27,6 +27,12 @@ module Adherence
       create_consequence.should raise_error(ArgumentError)
     end
 
+    it "should convert a non-array format to an array" do
+      @options[:formats] = :html
+      consequence = create_consequence.call
+      consequence.formats.should == [:html]
+    end
+
     %w(method args formats scenarios).each do |option|
       it "should raise an error with no value for #{option}" do
         @options.delete(option.to_sym)

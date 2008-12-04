@@ -31,8 +31,8 @@ module Adherence
         @action.consequences.detect do |consequence|
           consequence.method == :example &&
             consequence.args == [:one, :two] &&
-            consequence.formats == :all &&
-            consequence.scenarios == :all
+            consequence.formats == [:all] &&
+            consequence.scenarios == [:all]
         end.should_not be_nil
       end
     end
@@ -47,7 +47,7 @@ module Adherence
           consequence.method == :example &&
             consequence.args == [:one, :two] &&
             consequence.formats == [:html] &&
-            consequence.scenarios == :all
+            consequence.scenarios == [:all]
         end.should_not be_nil
       end
     end
@@ -61,7 +61,7 @@ module Adherence
         @action.consequences.detect do |consequence|
           consequence.method == :example &&
             consequence.args == [:one, :two] &&
-            consequence.formats == :all &&
+            consequence.formats == [:all] &&
             consequence.scenarios == [:saved]
         end.should_not be_nil
       end
@@ -77,7 +77,7 @@ module Adherence
           consequence.method == :example &&
             consequence.args == [:one, { :arg => :value }] &&
             consequence.formats == [:html] &&
-            consequence.scenarios == :all
+            consequence.scenarios == [:all]
         end.should_not be_nil
       end
     end

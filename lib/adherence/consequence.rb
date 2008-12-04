@@ -4,6 +4,8 @@ module Adherence
 
     def initialize(options)
       assert_valid_options!(options)
+      set_options(options)
+      convert_array_params
     end
 
     def to_proc
@@ -27,10 +29,17 @@ module Adherence
       if unknown_options.size > 0
         raise ArgumentError, "Unknown arguments: #{unknown_options.inspect}"
       end
+    end
 
+    def set_options(options)
       options.each do |opt, val|
         instance_variable_set("@#{opt}", val)
       end
+    end
+
+    def convert_array_params
+      @formats   = [@formats].flatten
+      @scenarios = [@scenarios].flatten
     end
 
     def valid_options #:nodoc:
