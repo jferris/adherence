@@ -5,7 +5,8 @@ module Adherence
     before do
       @options = { :method    => :example,
                    :args      => [:one, :two],
-                   :formats   => [:html] }
+                   :formats   => [:html],
+                   :scenarios => [:saved] }
     end
 
     def create_consequence
@@ -26,7 +27,7 @@ module Adherence
       create_consequence.should raise_error(ArgumentError)
     end
 
-    %w(method args formats).each do |option|
+    %w(method args formats scenarios).each do |option|
       it "should raise an error with no value for #{option}" do
         @options.delete(option.to_sym)
         create_consequence.should raise_error(ArgumentError)
@@ -47,9 +48,10 @@ module Adherence
   describe Consequence do
     before do
       @args        = [:one, :two]
-      @consequence = Consequence.new(:method  => :example, 
-                                     :args    => @args,
-                                     :formats => [:html])
+      @consequence = Consequence.new(:method    => :example, 
+                                     :args      => @args,
+                                     :formats   => [:html],
+                                     :scenarios => [:saved])
     end
 
     it "should call its method with the given args when run" do

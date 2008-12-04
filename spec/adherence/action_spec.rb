@@ -22,7 +22,7 @@ module Adherence
       end
     end
 
-    describe "after adding a consequence without formats" do
+    describe "after adding a consequence without formats or scenarios" do
       before do
         @action.consequence :example, :one, :two
       end
@@ -31,7 +31,8 @@ module Adherence
         @action.consequences.detect do |consequence|
           consequence.method == :example &&
             consequence.args == [:one, :two] &&
-            consequence.formats == :all
+            consequence.formats == :all &&
+            consequence.scenarios == :all
         end.should_not be_nil
       end
     end
@@ -45,7 +46,23 @@ module Adherence
         @action.consequences.detect do |consequence|
           consequence.method == :example &&
             consequence.args == [:one, :two] &&
-            consequence.formats == [:html]
+            consequence.formats == [:html] &&
+            consequence.scenarios == :all
+        end.should_not be_nil
+      end
+    end
+
+    describe "after adding a consequence with scenarios" do
+      before do
+        @action.consequence :example, :one, :two, :scenarios => [:saved]
+      end
+
+      it "should include that consequence in its list of consequences" do
+        @action.consequences.detect do |consequence|
+          consequence.method == :example &&
+            consequence.args == [:one, :two] &&
+            consequence.formats == :all &&
+            consequence.scenarios == [:saved]
         end.should_not be_nil
       end
     end
@@ -59,7 +76,8 @@ module Adherence
         @action.consequences.detect do |consequence|
           consequence.method == :example &&
             consequence.args == [:one, { :arg => :value }] &&
-            consequence.formats == [:html]
+            consequence.formats == [:html] &&
+            consequence.scenarios == :all
         end.should_not be_nil
       end
     end
