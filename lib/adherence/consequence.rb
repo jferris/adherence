@@ -16,6 +16,10 @@ module Adherence
       end
     end
 
+    def performs_as?(format)
+      formats.include?(format)
+    end
+
     private
 
     def assert_valid_options!(options) #:nodoc:

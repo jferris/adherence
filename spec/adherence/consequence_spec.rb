@@ -54,9 +54,10 @@ module Adherence
   describe Consequence do
     before do
       @args        = [:one, :two]
+      @formats     = [:html]
       @consequence = Consequence.new(:method    => :example, 
                                      :args      => @args,
-                                     :formats   => [:html],
+                                     :formats   => @formats,
                                      :scenarios => [:saved])
     end
 
@@ -71,6 +72,14 @@ module Adherence
       object = klass.new
       object.instance_eval(&@consequence)
       object.args.should == @args
+    end
+
+    it "should perform as a format in its format list" do
+      @consequence.performs_as?(@formats.first).should be_true
+    end
+
+    it "should not perform as a format missing from its list" do
+      @consequence.performs_as?(:bad_format).should be_false
     end
   end
 end
