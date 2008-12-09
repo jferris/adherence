@@ -55,10 +55,11 @@ module Adherence
     before do
       @args        = [:one, :two]
       @formats     = [:html]
+      @scenarios   = [:saved]
       @consequence = Consequence.new(:method    => :example, 
                                      :args      => @args,
                                      :formats   => @formats,
-                                     :scenarios => [:saved])
+                                     :scenarios => @scenarios)
     end
 
     it "should call its method with the given args when run" do
@@ -80,6 +81,14 @@ module Adherence
 
     it "should not perform as a format missing from its list" do
       @consequence.performs_as?(:bad_format).should be_false
+    end
+
+    it "should perform when in a scenario from its list" do
+      @consequence.performs_when?(@scenarios.first).should be_true
+    end
+
+    it "should not perform when in a scenario missing its list" do
+      @consequence.performs_when?(:bad_scenario).should be_false
     end
   end
 end

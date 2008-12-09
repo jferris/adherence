@@ -20,6 +20,10 @@ module Adherence
       formats.include?(format)
     end
 
+    def performs_when?(scenario)
+      scenarios.include?(scenario)
+    end
+
     private
 
     def assert_valid_options!(options) #:nodoc:
