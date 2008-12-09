@@ -24,5 +24,12 @@ module Adherence
                                       :formats   => formats,
                                       :scenarios => scenarios)
     end
+
+    def consequences_for(format, scenarios)
+      consequences.select do |consequence|
+        consequence.performs_as?(format) &&
+          scenarios.detect {|scenario| consequence.performs_when?(scenario) }
+      end
+    end
   end
 end

@@ -101,4 +101,58 @@ module Adherence
     end
   end
 
+  describe Action, "finding consequences" do
+    before do
+      @action = Action.new
+    end
+
+    def consequences(format, *scenarios)
+      @action.consequences_for(format, scenarios)
+    end
+
+    def consequence
+      @action.consequences.last
+    end
+
+    it "should find a consequence with a good format and good scenarios" do
+      @action.consequence :x, :as => [:format, :other], :when => [:good]
+      consequences(:format, :good).should include(consequence)
+    end
+
+    it "should find a consequence with no format and good scenarios" do
+      @action.consequence :x, :when => [:good]
+      consequences(:format, :good).should include(consequence)
+    end
+
+    it "should find a consequence with good and bad scenarios" do
+      @action.consequence :x, :when => [:good]
+      consequences(:format, :good, :bad).should include(consequence)
+    end
+
+    it "should find a consequence with no scenarios and a good format" do
+      @action.consequence :x, :as => [:format]
+      consequences(:format, :good).should include(consequence)
+    end
+
+    it "should find a consequence with no scenarios or format" do
+      @action.consequence :x
+      consequences(:format, :good).should include(consequence)
+    end
+
+    it "should not find a consequence with good scenarios and a bad format" do
+      @action.consequence :x, :as => [:format], :when => [:good]
+      consequences(:bad, :good).should_not include(consequence)
+    end
+
+    it "should not find a consequence with bad scenarios and a good format" do
+      @action.consequence :x, :as => [:format], :when => [:good]
+      consequences(:format, :bad).should_not include(consequence)
+    end
+
+    it "should not find a consequence with bad scenarios and a bad format" do
+      @action.consequence :x, :as => [:format], :when => [:good]
+      consequences(:bad, :bad).should_not include(consequence)
+    end
+  end
+
 end
