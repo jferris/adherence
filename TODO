@@ -1,0 +1,10 @@
+Consequence should return whether or not it will be performed for a given format
+Consequence should return whether or not it will be performed for a given scenario
+Action should return a list of consequences for given formats/scenarios
+Action should perform its consequences on a given controller as a given format
+ActionTemplate should provide an interface to find templates by name
+ActionTemplate should have a block to prepare an action
+ActionTemplate should yield a new action to its block
+ActionTemplate should build an action using its block and a list of formats
+Adherence should provide a DSL for creating/registering action templates
+Consequence should run symbol args as methods
