@@ -39,7 +39,7 @@ module Adherence
 
     describe "after adding a consequence with formats" do
       before do
-        @action.consequence :example, :one, :two, :formats => [:html]
+        @action.consequence :example, :one, :two, :as => [:html]
       end
 
       it "should include that consequence in its list of consequences" do
@@ -54,7 +54,7 @@ module Adherence
 
     describe "after adding a consequence with scenarios" do
       before do
-        @action.consequence :example, :one, :two, :scenarios => [:saved]
+        @action.consequence :example, :one, :two, :when => [:saved]
       end
 
       it "should include that consequence in its list of consequences" do
@@ -69,7 +69,7 @@ module Adherence
 
     describe "after adding a consequence with formats and hash arguments" do
       before do
-        @action.consequence :example, :one, :arg => :value, :formats => [:html]
+        @action.consequence :example, :one, :arg => :value, :as => [:html]
       end
 
       it "should include that consequence in its list of consequences" do
