@@ -91,4 +91,21 @@ module Adherence
       @consequence.performs_when?(:bad_scenario).should be_false
     end
   end
+
+  describe Consequence, "with all formats and scenarios" do
+    before do
+      @consequence = Consequence.new(:method    => :example, 
+                                     :args      => [],
+                                     :formats   => :all,
+                                     :scenarios => :all)
+    end
+
+    it "should perform as any format" do
+      @consequence.performs_as?(:whatever).should be_true
+    end
+    
+    it "should perform when in any scenario" do
+      @consequence.performs_when?(:something).should be_true
+    end
+  end
 end

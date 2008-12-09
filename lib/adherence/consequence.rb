@@ -17,11 +17,11 @@ module Adherence
     end
 
     def performs_as?(format)
-      formats.include?(format)
+      formats.include?(format) || formats.include?(:all)
     end
 
     def performs_when?(scenario)
-      scenarios.include?(scenario)
+      scenarios.include?(scenario) || scenarios.include?(:all)
     end
 
     private
