@@ -25,11 +25,30 @@ module Adherence
                                       :scenarios => scenarios)
     end
 
+    def perform(controller, format)
+      scenarios = perform_behaviors_on(controller)
+      consequences_for(format, scenarios.flatten.compact).each do |consequence|
+        perform_consequence_on(controller, consequence)
+      end
+    end
+
     def consequences_for(format, scenarios)
       consequences.select do |consequence|
         consequence.performs_as?(format) &&
           scenarios.detect {|scenario| consequence.performs_when?(scenario) }
       end
+    end
+
+    private
+
+    def perform_behaviors_on(controller)
+      behaviors.collect do |behavior|
+        controller.send(behavior)
+      end
+    end
+
+    def perform_consequence_on(controller, consequence)
+      controller.instance_eval(&consequence)
     end
   end
 end

@@ -155,4 +155,61 @@ module Adherence
     end
   end
 
+  describe Action, "with several consequences" do
+    before do
+      @action = Action.new
+      @action.behavior :behavior1
+      @action.behavior :behavior2
+
+      @action.consequence :one
+      @action.consequence :two,   :as   => :format
+      @action.consequence :three, :when => :good
+      @action.consequence :four,  :when => :better
+      @good_consequences = @action.consequences.dup
+
+      @action.consequence :bad, :as   => :bad
+      @action.consequence :bad, :when => :bad
+      @bad_consequences = @action.consequences - @good_consequences
+    end
+
+    describe "being performed on a controller" do
+      before do
+        klass = Class.new
+        klass.class_eval do 
+          attr_reader :received
+          def initialize; @received = []; end
+          def one;   @received << :one;   end
+          def two;   @received << :two;   end
+          def three; @received << :three; end
+          def four ; @received << :four;  end
+          def bad;   @received << :bad;   end
+          def behavior1
+            @received << :behavior1
+            [:good]
+          end
+          def behavior2
+            @received << :behavior2
+            [:better]
+          end
+        end
+        @controller = klass.new
+        
+        @action.perform(@controller, :format)
+      end
+
+      it "should run each of its behaviors" do
+        @controller.received.should include(:behavior1, :behavior2)
+      end
+
+      it "should run all matching consequences" do
+        methods = @good_consequences.collect {|c| c.method }
+        (methods - @controller.received).should == []
+      end
+
+      it "should not run any unmatched consequences" do
+        @controller.received.should_not include(:bad)
+      end
+    end
+  end
+
 end
