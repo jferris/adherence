@@ -1,6 +1,1 @@
-ActionTemplate should provide an interface to find templates by name
-ActionTemplate should have a block to prepare an action
-ActionTemplate should yield a new action to its block
-ActionTemplate should build an action using its block and a list of formats
-Adherence should provide a DSL for creating/registering action templates
 Consequence should run symbol args as methods
