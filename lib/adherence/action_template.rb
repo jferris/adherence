@@ -15,8 +15,9 @@ module Adherence
       self.block = block
     end
 
-    def build
+    def build(formats = [])
       action = Action.new
+      action.formats = formats
       block.call(action)
       action
     end

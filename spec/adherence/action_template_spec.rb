@@ -21,6 +21,10 @@ module Adherence
     it "should return an action when building" do
       @template.build.should be_instance_of(Action)
     end
+
+    it "should build an action with the specified format list" do
+      @template.build([:one, :two]).formats.should == [:one, :two]
+    end
   end
 
   describe ActionTemplate, "being created without a block" do
