@@ -53,7 +53,7 @@ module Adherence
 
   describe Consequence do
     before do
-      @args        = [:one, :two]
+      @args        = %w(one two)
       @formats     = [:html]
       @scenarios   = [:saved]
       @consequence = Consequence.new(:method    => :example, 
@@ -107,5 +107,30 @@ module Adherence
     it "should perform when in any scenario" do
       @consequence.performs_when?(:something).should be_true
     end
+  end
+
+  describe Consequence, "with symbol arguments" do
+    before do
+      @consequence = Consequence.new(:method    => :example, 
+                                     :args      => [:callme, :metoo],
+                                     :formats   => :all,
+                                     :scenarios => :all)
+    end
+
+    it "should call each symbol argument as a method" do
+      klass = Class.new
+      klass.class_eval do
+        attr_accessor :args, :received
+        def initialize;     @received = [];       end
+        def example(*args);                       end
+        def callme;         @received << :callme; end
+        def metoo;          @received << :metoo;  end
+      end
+
+      object = klass.new
+      object.instance_eval(&@consequence)
+      object.received.should == [:callme, :metoo]
+    end
+
   end
 end

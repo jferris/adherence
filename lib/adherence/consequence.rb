@@ -12,6 +12,13 @@ module Adherence
       method = self.method
       args   = self.args
       lambda do
+        args = args.collect do |arg|
+          if arg.is_a?(Symbol)
+            send(arg)
+          else
+            arg
+          end
+        end
         send(method, *args)
       end
     end
