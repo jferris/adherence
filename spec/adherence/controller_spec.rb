@@ -45,8 +45,14 @@ module Adherence
       end
 
       it "should build actions using the appropriate templates" do
-        @template_one.should_receive(:build).with().and_return(@action_one)
-        @template_two.should_receive(:build).with().and_return(@action_two)
+        @template_one.
+          should_receive(:build).
+          with([:all]).
+          and_return(@action_one)
+        @template_two.
+          should_receive(:build).
+          with([:all]).
+          and_return(@action_two)
         define_action
       end
 
@@ -68,6 +74,52 @@ module Adherence
 
         controller.one
         controller.two
+      end
+    end
+
+    describe "after defining an action with specific formats" do
+      before do
+        @template = ActionTemplate.new {}
+        ActionTemplate.register(:example, @template)
+        @template.stub!(:build)
+      end
+
+      def define_action
+        @klass.class_eval { performs :example, :as => [:one, :two] }
+      end
+
+      after do
+        ActionTemplate.templates.clear
+      end
+
+      it "should build actions using the specified formats" do
+        @template.
+          should_receive(:build).
+          with([:one, :two])
+        define_action
+      end
+    end
+
+    describe "after defining an action with a single format" do
+      before do
+        @template = ActionTemplate.new {}
+        ActionTemplate.register(:example, @template)
+        @template.stub!(:build)
+      end
+
+      def define_action
+        @klass.class_eval { performs :example, :as => :format }
+      end
+
+      after do
+        ActionTemplate.templates.clear
+      end
+
+      it "should build actions using the specified format" do
+        @template.
+          should_receive(:build).
+          with([:format])
+        define_action
       end
     end
   end

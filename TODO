@@ -1,4 +1,3 @@
-Controller should be able to perform actions as different formats
 Controller should refuse to perform an action in the wrong format
 Action should override conflicting consequences
 Consequence should have a list of possible conflicts

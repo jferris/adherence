@@ -28,9 +28,11 @@ module Adherence
       protected
 
       def performs(*action_names)
+        options = action_names.last.is_a?(Hash) ? action_names.pop : {}
+        formats = [options.delete(:as) || :all].flatten
         action_names.each do |action_name|
           template = ActionTemplate[action_name]
-          self.actions[action_name] = template.build
+          self.actions[action_name] = template.build(formats)
           define_method(action_name) { perform(action_name) }
         end
       end
