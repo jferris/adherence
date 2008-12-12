@@ -16,45 +16,58 @@ module Adherence
       @klass.new.format.should == :default
     end
 
-    describe "after defining a known action to be performed" do
+    describe "after defining known actions to be performed" do
       before do
-        @action   = Action.new
-        @template = ActionTemplate.new {}
+        @action_one   = Action.new
+        @action_two   = Action.new
+        @template_one = ActionTemplate.new {}
+        @template_two = ActionTemplate.new {}
 
-        ActionTemplate.register(:example, @template)
-        @template.stub!(:build).and_return(@action)
+        ActionTemplate.register(:one, @template_one)
+        ActionTemplate.register(:two, @template_two)
+
+        @template_one.stub!(:build).and_return(@action_one)
+        @template_two.stub!(:build).and_return(@action_two)
       end
 
       def define_action
-        @klass.class_eval { performs :example }
+        @klass.class_eval { performs :one, :two }
       end
 
       after do
         ActionTemplate.templates.clear
       end
 
-      it "should have an action with that name" do
+      it "should have actions with the registered names" do
         define_action
-        @klass.actions[:example].should_not be_nil
+        @klass.actions[:one].should_not be_nil
+        @klass.actions[:two].should_not be_nil
       end
 
-      it "should build an action using the appropriate template" do
-        @template.should_receive(:build).with().and_return(@action)
+      it "should build actions using the appropriate templates" do
+        @template_one.should_receive(:build).with().and_return(@action_one)
+        @template_two.should_receive(:build).with().and_return(@action_two)
         define_action
       end
 
-      it "should assign the built action" do
+      it "should assign the built actions" do
         define_action
-        @klass.actions[:example].should == @action
+        @klass.actions[:one].should == @action_one
+        @klass.actions[:two].should == @action_two
       end
 
-      it "should perform the given action when called" do
+      it "should perform the built action when called" do
         define_action
         controller = @klass.new
-        controller.should respond_to(:example)
 
-        @action.should_receive(:perform).with(controller, controller.format)
-        controller.example
+        controller.should respond_to(:one)
+        controller.should respond_to(:two)
+
+        @action_one.should_receive(:perform).with(controller, controller.format)
+        @action_two.should_receive(:perform).with(controller, controller.format)
+
+        controller.one
+        controller.two
       end
     end
   end

@@ -27,10 +27,12 @@ module Adherence
 
       protected
 
-      def performs(action_name)
-        template = ActionTemplate[action_name]
-        self.actions[action_name] = template.build
-        define_method(action_name) { perform(action_name) }
+      def performs(*action_names)
+        action_names.each do |action_name|
+          template = ActionTemplate[action_name]
+          self.actions[action_name] = template.build
+          define_method(action_name) { perform(action_name) }
+        end
       end
     end
 
