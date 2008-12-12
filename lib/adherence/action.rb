@@ -26,6 +26,7 @@ module Adherence
     end
 
     def perform(controller, format)
+      assert_valid_format(format)
       scenarios = perform_behaviors_on(controller)
       consequences_for(format, scenarios.flatten.compact).each do |consequence|
         perform_consequence_on(controller, consequence)
@@ -49,6 +50,12 @@ module Adherence
 
     def perform_consequence_on(controller, consequence)
       controller.instance_eval(&consequence)
+    end
+
+    def assert_valid_format(format)
+      unless formats.include?(format) || formats.include?(:all)
+        raise ArgumentError, "Unrecognized format: #{format}"
+      end
     end
   end
 end

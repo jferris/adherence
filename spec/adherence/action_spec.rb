@@ -158,6 +158,7 @@ module Adherence
   describe Action, "with several consequences" do
     before do
       @action = Action.new
+      @action.formats = [:format]
       @action.behavior :behavior1
       @action.behavior :behavior2
 
@@ -209,6 +210,30 @@ module Adherence
       it "should not run any unmatched consequences" do
         @controller.received.should_not include(:bad)
       end
+    end
+  end
+
+  describe Action, "with a list of formats" do
+    before do
+      @action = Action.new
+      @action.formats = [:one, :two]
+    end
+
+    it "should raise an error when performing as another format" do
+      lambda { @action.perform(Object.new, :other) }.
+        should raise_error
+    end
+  end
+
+  describe Action, "performing as all formats" do
+    before do
+      @action = Action.new
+      @action.formats = [:all]
+    end
+
+    it "should not raise an error when performing as any format" do
+      lambda { @action.perform(Object.new, :format) }.
+        should_not raise_error
     end
   end
 
