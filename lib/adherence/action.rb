@@ -34,13 +34,22 @@ module Adherence
     end
 
     def consequences_for(format, scenarios)
-      consequences.select do |consequence|
-        consequence.performs_as?(format) &&
-          scenarios.detect {|scenario| consequence.performs_when?(scenario) }
+      results = []
+      consequences.each do |consequence|
+        if perform?(consequence, format, scenarios)
+          results.reject! {|existing| existing.conflicts_with?(consequence) }
+          results << consequence
+        end
       end
+      results
     end
 
     private
+
+    def perform?(consequence, format, scenarios)
+      consequence.performs_as?(format) &&
+        scenarios.detect {|scenario| consequence.performs_when?(scenario) }
+    end
 
     def perform_behaviors_on(controller)
       behaviors.collect do |behavior|

@@ -31,6 +31,10 @@ module Adherence
       scenarios.include?(scenario) || scenarios.include?(:all)
     end
 
+    def conflicts_with?(consequence)
+      consequence.method == method
+    end
+
     private
 
     def assert_valid_options!(options) #:nodoc:

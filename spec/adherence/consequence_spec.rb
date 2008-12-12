@@ -90,6 +90,22 @@ module Adherence
     it "should not perform when in a scenario missing its list" do
       @consequence.performs_when?(:bad_scenario).should be_false
     end
+
+    it "should conflict with a consequence with the same method" do
+      other = Consequence.new(:method    => @consequence.method,
+                              :args      => @consequence.args,
+                              :formats   => @consequence.formats,
+                              :scenarios => @consequence.scenarios)
+      @consequence.conflicts_with?(other).should be_true
+    end
+
+    it "should not conflict with a consequence with a different method" do
+      other = Consequence.new(:method    => :other_method,
+                              :args      => @consequence.args,
+                              :formats   => @consequence.formats,
+                              :scenarios => @consequence.scenarios)
+      @consequence.conflicts_with?(other).should be_false
+    end
   end
 
   describe Consequence, "with all formats and scenarios" do

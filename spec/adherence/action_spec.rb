@@ -153,6 +153,26 @@ module Adherence
       @action.consequence :x, :as => [:format], :when => [:good]
       consequences(:bad, :bad).should_not include(consequence)
     end
+
+    it "should override a consequence that conflicts with a later one" do
+      @action.consequence :x
+      first = @action.consequences.last
+      @action.consequence :x
+      second = @action.consequences.last
+      results = consequences(:format, :good)
+      results.should include(second)
+      results.should_not include(first)
+    end
+
+    it "should not override a consequence with no conflicts" do
+      @action.consequence :x
+      first = @action.consequences.last
+      @action.consequence :y
+      second = @action.consequences.last
+      results = consequences(:format, :good)
+      results.should include(first)
+      results.should include(second)
+    end
   end
 
   describe Action, "with several consequences" do
