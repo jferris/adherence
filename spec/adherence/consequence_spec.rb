@@ -149,4 +149,26 @@ module Adherence
     end
 
   end
+
+  describe Consequence, "with a defined conflict" do
+    before do
+      Consequence.conflict :one, :two
+      @consequence = Consequence.new(:method    => :one,
+                                     :args      => [],
+                                     :formats   => [],
+                                     :scenarios => [])
+    end
+
+    after do
+      Consequence.conflicts.clear
+    end
+
+    it "should conflict with a consequence with the specified name" do
+      other = Consequence.new(:method    => :two,
+                              :args      => [],
+                              :formats   => [],
+                              :scenarios => [])
+      @consequence.conflicts_with?(other).should be_true
+    end
+  end
 end

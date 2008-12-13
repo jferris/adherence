@@ -1,5 +1,17 @@
 module Adherence
   class Consequence
+    class << self
+      attr_accessor :conflicts
+    end
+    self.conflicts = Hash.new { [] }
+
+    def self.conflict(*methods)
+      methods.each do |method|
+        conflicts_for_method = methods - [method]
+        self.conflicts[method] += conflicts_for_method
+      end
+    end
+
     attr_reader :method, :args, :formats, :scenarios
 
     def initialize(options)
@@ -32,7 +44,8 @@ module Adherence
     end
 
     def conflicts_with?(consequence)
-      consequence.method == method
+      consequence.method == method ||
+        defined_conflicts.include?(consequence.method)
     end
 
     private
@@ -50,7 +63,7 @@ module Adherence
       end
     end
 
-    def set_options(options)
+    def set_options(options) #:nodoc:
       options.each do |opt, val|
         instance_variable_set("@#{opt}", val)
       end
@@ -63,6 +76,10 @@ module Adherence
 
     def valid_options #:nodoc:
       [:method, :args, :formats, :scenarios]
+    end
+
+    def defined_conflicts #:nodoc:
+      self.class.conflicts[method]
     end
   end
 end
